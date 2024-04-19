@@ -1,7 +1,23 @@
-import { Box, Button, Center, ChakraProvider, Flex, IconButton, Input, Stack, Text, VStack } from "@chakra-ui/react";
-import { FaLocationArrow, FaPaperPlane, FaPlus } from "react-icons/fa";
+import { useState } from "react";
+import { Box, Center, ChakraProvider, Flex, IconButton, Input, Text, VStack } from "@chakra-ui/react";
+import { FaLocationArrow, FaPaperPlane } from "react-icons/fa";
 
 const Index = () => {
+  const [messages, setMessages] = useState([
+    { text: "Hi there!", align: "flex-start", bg: "blue.100" },
+    { text: "Hello!", align: "flex-end", bg: "green.100" },
+    { text: "How's everything going?", align: "flex-start", bg: "blue.100" },
+    { text: "All good, thanks!", align: "flex-end", bg: "green.100" },
+  ]);
+  const [inputValue, setInputValue] = useState("");
+
+  const handleSendMessage = () => {
+    if (inputValue.trim()) {
+      setMessages([...messages, { text: inputValue, align: "flex-end", bg: "green.100" }]);
+      setInputValue("");
+    }
+  };
+
   return (
     <ChakraProvider>
       <Center bg="gray.50" minH="100vh" p={4}>
@@ -13,23 +29,15 @@ const Index = () => {
               </Text>
             </Box>
             <Flex direction="column" overflowY="scroll" p={3} h="400px">
-              {/* Dummy messages */}
-              <Text bg="blue.100" p={2} borderRadius="lg" alignSelf="flex-start" maxW="70%">
-                Hi there!
-              </Text>
-              <Text bg="green.100" p={2} borderRadius="lg" alignSelf="flex-end" maxW="70%">
-                Hello!
-              </Text>
-              <Text bg="blue.100" p={2} borderRadius="lg" alignSelf="flex-start" maxW="70%">
-                How's everything going?
-              </Text>
-              <Text bg="green.100" p={2} borderRadius="lg" alignSelf="flex-end" maxW="70%">
-                All good, thanks!
-              </Text>
+              {messages.map((message, index) => (
+                <Text key={index} bg={message.bg} p={2} borderRadius="lg" alignSelf={message.align} maxW="70%">
+                  {message.text}
+                </Text>
+              ))}
             </Flex>
             <Flex w="full" align="center" p={3}>
-              <Input placeholder="Type a message..." flex="1" />
-              <IconButton icon={<FaPaperPlane />} ml={2} colorScheme="blue" aria-label="Send message" />
+              <Input value={inputValue} onChange={(e) => setInputValue(e.target.value)} placeholder="Type a message..." flex="1" />
+              <IconButton onClick={handleSendMessage} icon={<FaPaperPlane />} ml={2} colorScheme="blue" aria-label="Send message" />
               <IconButton icon={<FaLocationArrow />} ml={2} colorScheme="teal" aria-label="Find plan" />
             </Flex>
           </VStack>
